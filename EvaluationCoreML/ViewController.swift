@@ -25,12 +25,6 @@ class ViewController: NSViewController {
         predictionProgressBar.maxValue = 1
         predictionProgressBar.doubleValue = 0
     }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
     
     @IBAction func folderSelectionButton(_ sender: Any) {
         
