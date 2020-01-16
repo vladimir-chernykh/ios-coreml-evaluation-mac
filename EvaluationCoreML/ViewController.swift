@@ -28,21 +28,21 @@ class ViewController: NSViewController {
     
     @IBAction func folderSelectionButton(_ sender: Any) {
         
-        let dialog = NSOpenPanel();
+        let openDialog = NSOpenPanel();
 
-        dialog.title                   = "Choose a folder with images";
-        dialog.showsResizeIndicator    = true;
-        dialog.showsHiddenFiles        = false;
-        dialog.allowsMultipleSelection = false;
-        dialog.canChooseDirectories    = true;
-        dialog.canChooseFiles          = false;
+        openDialog.title                   = "Choose a folder with images";
+        openDialog.showsResizeIndicator    = true;
+        openDialog.showsHiddenFiles        = false;
+        openDialog.allowsMultipleSelection = false;
+        openDialog.canChooseDirectories    = true;
+        openDialog.canChooseFiles          = false;
         
-        if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
+        if (openDialog.runModal() ==  NSApplication.ModalResponse.OK) {
             
-            let results = dialog.urls // Pathname of the directory
+            let inputFolder = openDialog.url! // Pathname of the directory
 
             do {
-                let directoryContents = try FileManager.default.contentsOfDirectory(at: results[0], includingPropertiesForKeys: nil)
+                let directoryContents = try FileManager.default.contentsOfDirectory(at: inputFolder, includingPropertiesForKeys: nil)
 
                 let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }
 
@@ -61,19 +61,19 @@ class ViewController: NSViewController {
                             self.predictionProgressLabel.title = "\(String(Int(self.predictionProgressBar.doubleValue)))/\(String(jpgFiles.count))"
                         }
                     }
-                    let filename = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("output.txt")
-                    print(filename)
-                    (predictions as NSArray).write(to: filename, atomically: true)
                     DispatchQueue.main.async {
+                        let saveDialog = NSSavePanel();
+                        saveDialog.nameFieldStringValue = "output.plist"
+                        if (saveDialog.runModal() ==  NSApplication.ModalResponse.OK) {
+                            let savePath = saveDialog.url!
+                            (predictions as NSArray).write(to: savePath, atomically: true)
+                        }
                         self.predictionProgressLabel.title = "Done!"
                     }
                 }
             } catch {
                 print(error)
             }
-        } else {
-            print("Cancel")
-            return
         }
 
     }
