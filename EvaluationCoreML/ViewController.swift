@@ -38,7 +38,7 @@ class ViewController: NSViewController {
         openDialog.canChooseFiles          = false;
         
         if (openDialog.runModal() ==  NSApplication.ModalResponse.OK) {
-            
+
             let inputFolder = openDialog.url! // Pathname of the directory
 
             do {
