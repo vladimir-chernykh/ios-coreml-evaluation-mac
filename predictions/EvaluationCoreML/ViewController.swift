@@ -18,6 +18,8 @@ class ViewController: NSViewController {
 
     var request: VNDetectFaceRectanglesRequest?
     
+    let allowedImageExtensions = ["jpg", "JPG", "jpeg", "JPEG"]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         request = VNDetectFaceRectanglesRequest()
@@ -44,7 +46,7 @@ class ViewController: NSViewController {
             do {
                 let directoryContents = try FileManager.default.contentsOfDirectory(at: inputFolder, includingPropertiesForKeys: nil)
 
-                let jpgFiles = directoryContents.filter{ $0.pathExtension == "jpg" }
+                let jpgFiles = directoryContents.filter{ allowedImageExtensions.contains($0.pathExtension) }
 
                 predictionProgressBar.minValue = 0
                 predictionProgressBar.maxValue = Double(jpgFiles.count)
